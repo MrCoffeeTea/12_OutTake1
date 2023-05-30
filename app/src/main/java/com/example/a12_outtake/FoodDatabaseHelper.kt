@@ -9,6 +9,11 @@ import android.widget.Toast
 //数据库助手类: 上下文，数据库名称，版本号
 class FoodDatabaseHelper(val context: Context, name:String, version: Int) : SQLiteOpenHelper(context, name, null, version) {
 
+    companion object{
+        const val DATABASE_NAME = "OutTake"
+        const val VERSION = 1
+    }
+
     //建立菜品列表:id，菜名，库存，价格，描述
     private val createMenu = "create table foodMenu (id integer primary key autoincrement, " +
             "foodName text, repertory integer, price real, description text )"
@@ -19,9 +24,10 @@ class FoodDatabaseHelper(val context: Context, name:String, version: Int) : SQLi
 
 
     override fun onCreate(db: SQLiteDatabase) {
+        db.execSQL(createMenu)
         db.execSQL(createOrderList)
-        Toast.makeText(context, "订单列表的数据表建立成功", Toast.LENGTH_SHORT).show()
-        Log.d("www","订单列表的数据表建立成功")
+        Toast.makeText(context, "数据表建立成功", Toast.LENGTH_SHORT).show()
+        Log.d("www","数据表建立成功")
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {

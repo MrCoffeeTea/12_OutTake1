@@ -1,8 +1,11 @@
 package com.example.a12_outtake
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build.VERSION
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -16,20 +19,71 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var viewModel: FoodViewModel
+    //lateinit var viewModel: FoodViewModel
     //数据数组
-    lateinit var foods: MutableList<Food>
-
+    var foods : MutableList<Food> = mutableListOf()
     val foodList = ArrayList<Food>()
 
 
+    @SuppressLint("Range")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         //从viewmodel获取食品数据
-        viewModel = ViewModelProvider(this).get(FoodViewModel::class.java)
-        foods = viewModel.foods
+        //viewModel = ViewModelProvider(this).get(FoodViewModel::class.java)
+        //foods = viewModel.foods
+
+        //(有可能)插入菜单数据
+        val dbHelper = FoodDatabaseHelper(this, FoodDatabaseHelper.DATABASE_NAME, FoodDatabaseHelper.VERSION)
+        val db = dbHelper.writableDatabase
+        //查询是否为空，如果空则插入
+        val cursor = db.query("foodMenu", arrayOf("COUNT(*) AS count"),null,null,null,null,null)
+        cursor.moveToFirst()
+        val count = cursor.getInt(cursor.getColumnIndex("count"))
+
+        Log.d("www","数据库menu表一共有${count}项")
+        if(count == 0){         //空，插入数据
+            for( f in menuData.valueList){
+                 db.insert("foodMenu", null, f)
+            }
+        }
+
+
+        //从数据库读取菜单数据
+        val cursor2 = db.query("foodMenu", null,null,null,null,null,null)
+        if(cursor2.moveToFirst()){
+            var i=1
+            do{
+                //遍历Cursor读取数据存入到foods列表
+                val id = cursor2.getInt(cursor2.getColumnIndex("id"))
+                val name = cursor2.getString(cursor2.getColumnIndex("foodName"))
+                val repertory = cursor2.getInt(cursor2.getColumnIndex("repertory"))
+                val price = cursor2.getDouble(cursor2.getColumnIndex("price"))
+                val description = cursor2.getString(cursor2.getColumnIndex("description"))
+
+            //获取图片资源ID. getIdentifier如果没有找到资源返回0可能崩溃
+                val imgName = "food"+i
+                val imgID = resources.getIdentifier(imgName, "drawable",packageName)
+
+                val f = Food(name,imgID,price,description)
+                foods.add(f)        //插入foods列表，用于渲染主页列表
+                i++
+            }while (cursor2.moveToNext())
+        }
+
+
+        cursor.close()
+        cursor2.close()
+        db.close()
+
+        //设置列表内容
+        initFoods()
+        val layoutManager = GridLayoutManager(this, 2)  //网格布局
+        recyclerView.layoutManager = layoutManager
+        val adapter = FoodAdapter(this, foodList)     //适配器绑定
+        recyclerView.adapter = adapter
+
 
 
         //设置自己的toolbar
@@ -48,21 +102,11 @@ class MainActivity : AppCompatActivity() {
             true            //最后一行为返回值,表示时间已经被处理
         }
 
-
         //购物车按钮点击后页面进行跳转
-        fab.setOnClickListener{
+        gotoCart.setOnClickListener{
             val intent = Intent(this, CartActivity::class.java)
             startActivity(intent)
         }
-
-
-        //设置列表内容
-        initFoods()
-        val layoutManager = GridLayoutManager(this, 2)  //网格布局
-        recyclerView.layoutManager = layoutManager
-        val adapter = FoodAdapter(this, foodList)     //适配器绑定
-        recyclerView.adapter = adapter
-
 
         //设置列表下拉刷新属性和监听器
         swipeRefresh.setColorSchemeResources(androidx.appcompat.R.color.abc_background_cache_hint_selector_material_dark)
@@ -71,8 +115,10 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
     }
+
+
+
 
 
     //加载菜单选项
