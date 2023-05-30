@@ -1,5 +1,6 @@
 package com.example.a12_outtake
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -8,7 +9,7 @@ import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_cart.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
 
@@ -26,9 +27,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //获取viewmodel的数据
+        //从viewmodel获取食品数据
         viewModel = ViewModelProvider(this).get(FoodViewModel::class.java)
         foods = viewModel.foods
+
 
         //设置自己的toolbar
         setSupportActionBar(toolbar)
@@ -47,18 +49,16 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        //设置悬浮按钮的点击事件,使用了Snackbar
+        //购物车按钮点击后页面进行跳转
         fab.setOnClickListener{
-            //make函数第二个参数为提示信息
-            view -> Snackbar.make(view, "Data delete", Snackbar.LENGTH_SHORT ).setAction("Undo"){   //设定点击动作
-                  Toast.makeText(this, "Data restored", Toast.LENGTH_SHORT).show()
-             }.show()
+            val intent = Intent(this, CartActivity::class.java)
+            startActivity(intent)
         }
 
 
         //设置列表内容
         initFoods()
-        val layoutManager = GridLayoutManager(this, 1)  //网格布局
+        val layoutManager = GridLayoutManager(this, 2)  //网格布局
         recyclerView.layoutManager = layoutManager
         val adapter = FoodAdapter(this, foodList)     //适配器绑定
         recyclerView.adapter = adapter
@@ -69,6 +69,8 @@ class MainActivity : AppCompatActivity() {
         swipeRefresh.setOnRefreshListener {
             refreshFoods(adapter)      //传入适配器用于通知列表数据已经更新
         }
+
+
 
     }
 

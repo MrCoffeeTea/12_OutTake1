@@ -50,5 +50,5 @@ class FoodActivity : AppCompatActivity() {
     }
 
 //生成食品介绍
-    private fun generateFoodContent(foodName: String) = foodName.repeat(500)
+//    private fun generateFoodContent(foodName: String) = foodName.repeat(500)
 }
