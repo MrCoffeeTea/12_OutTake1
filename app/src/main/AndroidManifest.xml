@@ -13,14 +13,9 @@
         android:theme="@style/myTheme"
         tools:targetApi="31" >
         <activity
-            android:name=".Payment"
-            android:exported="false" >
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".CartActivity"
+            android:label="购物车"
+            android:theme="@style/myTheme"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
@@ -28,6 +23,7 @@
         </activity>
         <activity
             android:name=".FoodActivity"
+            android:label="菜品详情"
             android:exported="false"
             android:theme="@style/FoodActivityTheme" >
             <meta-data
@@ -36,6 +32,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:label="超级外卖"
             android:exported="true"
             android:theme="@style/myTheme" >
             <intent-filter>

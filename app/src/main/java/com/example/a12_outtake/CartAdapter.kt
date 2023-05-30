@@ -52,18 +52,27 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val food = foodList.keys.toList()[position]
-        val num = foodList[food]
+        var num = foodList[food]
 
         holder.foodName.text = food.name
         holder.foodPrice.text = "￥ ${food.price.toString()}"
         holder.foodNumber.text = " * $num"
         Glide.with(context).load(food.imageId).into(holder.foodImage)
 
-        //删除food
+        //删除food：数量减1或者去除
         holder.deleteFood.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "成功删除", Toast.LENGTH_SHORT).show()
 
-            CartData.items.remove(food)        //删除food
+
+//            if(holder.foodNumber.text.toString().toInt() > 1){
+//                num?.minus(1)
+//                holder.foodNumber.text = " * ${num}"
+//            }else{
+//                CartData.items.remove(food)        //删除food
+//                Toast.makeText(holder.itemView.context, "成功删除", Toast.LENGTH_SHORT).show()
+//            }
+            CartData.items.remove(food)
+            Toast.makeText(holder.itemView.context, "成功删除", Toast.LENGTH_SHORT).show()
+            //如何修改UI把food从购物车删除呢？
 
         }
     }
