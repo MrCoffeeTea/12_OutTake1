@@ -66,8 +66,10 @@ class FoodAdapter(val context: Context, val foodList: List<Food>) : RecyclerView
             //如果存在则数量+1，否则插入
             if(CartData.items.containsKey(food)){
                 CartData.items.put(food,CartData.items.getValue(food)+1)
+                Log.d("www","${food.name}数量加1，此时数量为${CartData.items[food]}.")
             }else{
                 CartData.items.put(food,1)
+                Log.d("www","${food.name}添加成功,此时数量为1")
             }
         }
 

@@ -18,7 +18,7 @@
     <!-- 自定义的状态栏toolbar-->
     <style name="myTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">#389fd6</item>
+        <item name="colorPrimary">#b99bf8</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->

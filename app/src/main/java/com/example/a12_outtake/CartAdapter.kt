@@ -1,6 +1,7 @@
 package com.example.a12_outtake
 
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -19,12 +20,29 @@ import com.bumptech.glide.Glide
 class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
 
 
+    //定义回调接口，被CartActivity继承，用于Activity更新UI。因为Adapter内无法更新UI
+    interface cartDeleteListener{
+        fun onFoodDeleteBtn(food: Food, num:Int)     //接口传入被点击的Food
+    }
+
+    private var mydeletelistener : cartDeleteListener? = null        //引用回调接口
+
+    //实现设置回调方法，用于给CartActivity把自己设置进来
+    fun setOnItemDeleteListener(itemDeleteListener: cartDeleteListener){
+        mydeletelistener = itemDeleteListener
+    }
+
+
+
+
+
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val foodImage: ImageView = view.findViewById(R.id.foodImage)
         val foodName : TextView = view.findViewById(R.id.foodName)
         val foodPrice: TextView = view.findViewById(R.id.foodPrice)
         val foodNumber : TextView = view.findViewById(R.id.cartFoodNum)
         val deleteFood:Button = view.findViewById(R.id.deleteFood)
+
 
     }
 
@@ -61,18 +79,10 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
 
         //删除food：数量减1或者去除
         holder.deleteFood.setOnClickListener {
-
-
-//            if(holder.foodNumber.text.toString().toInt() > 1){
-//                num?.minus(1)
-//                holder.foodNumber.text = " * ${num}"
-//            }else{
-//                CartData.items.remove(food)        //删除food
-//                Toast.makeText(holder.itemView.context, "成功删除", Toast.LENGTH_SHORT).show()
-//            }
-            CartData.items.remove(food)
-            Toast.makeText(holder.itemView.context, "成功删除", Toast.LENGTH_SHORT).show()
-            //如何修改UI把food从购物车删除呢？
+            //调用回调接口的回调方法，传入被点击的food及其数量
+            if (num != null) {
+                mydeletelistener?.onFoodDeleteBtn(food,num)
+            }
 
         }
     }
