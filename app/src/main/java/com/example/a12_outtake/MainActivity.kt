@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.activity_cart.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -19,20 +20,17 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
-    //lateinit var viewModel: FoodViewModel
     //数据数组
     var foods : MutableList<Food> = mutableListOf()
     val foodList = ArrayList<Food>()
-
+    //Food添加购物车需要监控购物车数据，把其传递给FoodAdapter
+    val cartviewModel:CartViewModel by lazy { SingleCartViewModel.getCartViewModel() }
+   // val cartviewModelStore = ViewModelStore()           //存储viewmodel状态，确保主页和购物车的cartviewmodel是同一个对象，md没屌用
 
     @SuppressLint("Range")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //从viewmodel获取食品数据
-        //viewModel = ViewModelProvider(this).get(FoodViewModel::class.java)
-        //foods = viewModel.foods
 
         //(有可能)插入菜单数据
         val dbHelper = FoodDatabaseHelper(this, FoodDatabaseHelper.DATABASE_NAME, FoodDatabaseHelper.VERSION)
@@ -77,11 +75,13 @@ class MainActivity : AppCompatActivity() {
         cursor2.close()
         db.close()
 
-        //设置列表内容
+        //设置列表内容,获取购物车数据的viewmodel并传递给FoodAdapter
         initFoods()
+      //  cartviewModel = ViewModelProvider(viewModelStore,ViewModelProvider.AndroidViewModelFactory(application))
+       //     .get(CartViewModel::class.java)         //确保此处的cartViewModel和cartactivity的viewmodel是同一个对象
         val layoutManager = GridLayoutManager(this, 2)  //网格布局
         recyclerView.layoutManager = layoutManager
-        val adapter = FoodAdapter(this, foodList)     //适配器绑定
+        val adapter = FoodAdapter(this, foodList, cartviewModel)     //适配器绑定
         recyclerView.adapter = adapter
 
 
@@ -162,5 +162,15 @@ class MainActivity : AppCompatActivity() {
                 swipeRefresh.isRefreshing = false       //隐藏进度条，表示刷新成功
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("www","MainActivity被销毁")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("www","MainActivity Stop")
     }
 }

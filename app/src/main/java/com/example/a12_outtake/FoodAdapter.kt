@@ -2,7 +2,6 @@ package com.example.a12_outtake
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +10,13 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 
-class FoodAdapter(val context: Context, val foodList: List<Food>) : RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
+//把购物车的viewmodel作为参数传入
+class FoodAdapter(val context: Context, val foodList: List<Food>, private val cartViewModel: CartViewModel) : RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
 
     //ViewHolder承载列表项的布局,并被绑定了数据
     //列表项的数据和内容在这里找到赋值给holder
@@ -60,16 +61,19 @@ class FoodAdapter(val context: Context, val foodList: List<Food>) : RecyclerView
 
 
         //加入购物车,数据传递到CartActivity
+        //2个列表项，首先点击了A，A修改成功。然后点击B，此时获取的数据B却修改的仍旧是A————————————————————————————————————
         holder.putInCartBtn.setOnClickListener {
             Toast.makeText(holder.itemView.context,"成功添加",Toast.LENGTH_SHORT).show()
-
+            cartViewModel.id = 2
             //如果存在则数量+1，否则插入
-            if(CartData.items.containsKey(food)){
-                CartData.items.put(food,CartData.items.getValue(food)+1)
-                Log.d("www","${food.name}数量加1，此时数量为${CartData.items[food]}.")
+            if(cartViewModel.items.containsKey(food)){
+                cartViewModel.items.put(food,cartViewModel.items.getValue(food)+1)
+                Log.d("www","${food.name}数量加1，此时数量为${cartViewModel.items[food]}.")
+                //Log.d("www","此时cartviewmodel数量为：${cartViewModel.items.size}")
             }else{
-                CartData.items.put(food,1)
+                cartViewModel.items.put(food,1)
                 Log.d("www","${food.name}添加成功,此时数量为1")
+                //Log.d("www","此时cartviewmodel数量为：${cartViewModel.items.size}")
             }
         }
 
