@@ -22,7 +22,7 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
 
     //定义回调接口，被CartActivity继承，用于Activity更新UI。因为Adapter内无法更新UI
     interface cartDeleteListener{
-        fun onFoodDeleteBtn(food: Food, num:Int)     //接口传入被点击的Food
+        fun onFoodDeleteBtn(food: Food, num:Int, position: Int)     //接口传入被点击的Food
     }
 
     private var mydeletelistener : cartDeleteListener? = null        //引用回调接口
@@ -81,14 +81,21 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
         holder.deleteFood.setOnClickListener {
             //调用回调接口的回调方法，传入被点击的food及其数量
             if (num != null) {
-                mydeletelistener?.onFoodDeleteBtn(food,num)
+                Log.d("www","${holder.foodName.text}的删除按钮被点击了")
+                mydeletelistener?.onFoodDeleteBtn(food,num,position)
             }
 
         }
     }
 
 
-
     override fun getItemCount() = foodList.size
+
+    //通知RecyclerView删除列表项后更新UI
+    fun removeCartFood(position: Int){
+        notifyItemRemoved(position)
+        Log.d("www","CartAdapter的notifyItemRemoved被调用")
+    }
+
 
 }
