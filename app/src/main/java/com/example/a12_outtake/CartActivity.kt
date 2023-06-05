@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStore
@@ -21,10 +24,9 @@ import kotlin.concurrent.thread
 class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
 
     lateinit var foodList: MutableMap<Food,Int>
-   // lateinit var cviewModel: CartViewModel
     val cviewModel : CartViewModel by lazy { SingleCartViewModel.getCartViewModel() }
     val cviewModelStore = ViewModelStore()
-    lateinit var adapter : CartAdapter              //tmd要注意使用同一个adapter！不如数据tmd不更新
+    lateinit var adapter : CartAdapter              //tmd要注意使用同一个adapter！不然数据tmd不更新
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("www","cartActivity首次创建onCreate")
@@ -35,8 +37,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
         //从CartViewModel获取购物车数据：无效
        // cviewModel = ViewModelProvider(viewModelStore,ViewModelProvider.AndroidViewModelFactory(application)).get(CartViewModel::class.java)
 
-       // foodList = cviewModel.items
-        Log.d("www","购物车获取的cviewModel的items的数量为${cviewModel.items.size}")
+       // Log.d("www","购物车获取的cviewModel的items的数量为${cviewModel.items.size}")
 
         //渲染购物车列表UI
         val layoutManager = GridLayoutManager(this, 1)
@@ -50,12 +51,9 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
         setSupportActionBar(cartToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)       //home键显示出来
 
-        //失败，无法返回
-        cartNavView.setOnClickListener{
-            intent = Intent(this,MainActivity::class.java)
-            startActivity(intent)
-        }
 
+        //初始化底部总价格
+        cartSum?.setText(updateCartSum(cviewModel.items))
 
 
         //刷新
@@ -72,7 +70,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
     }
 
 
-    //一次只能减少1，删除列表要点击数量后才删除
+    //删除按钮，删除viewmodel的数据后通知adapter数据修改，进而重新渲染页面
     override fun onFoodDeleteBtn(food: Food, num:Int, position:Int) {
         var n = num
 
@@ -82,34 +80,78 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
             n = n-1
             cviewModel.items[food] = n
             cartFoodNum.text = " * ${n}"
-            adapter.notifyItemChanged(position)     //必须更新adapter内的foodlist
+            //adapter.notifyItemChanged(position)     //必须更新adapter内的foodlist
+            adapter.notifyDataSetChanged()
             Log.d("www","${food.name}减少一个，数量n为$n")
 
         }else if(n == 1){
             cviewModel.items.remove(food)
             Toast.makeText(this, "删除成功！",Toast.LENGTH_SHORT).show()
-            adapter.removeCartFood(position)            //更新UI：删除列表项
+            //adapter.removeCartFood(position)            //更新UI：删除列表项
+            adapter.notifyDataSetChanged()
             Log.d("www","删除${food.name}")
 
         }else{
             Log.d("www","错误，删除了购物车不存在的食品")
         }
 
-      //  cviewModel.getCartData()          //观察数据变化
+        //修改总金额
+        cartSum.setText(updateCartSum(cviewModel.items))
 
+       // cviewModel.getCartData()          //控制台观察数据变化
+       // Log.d("www","\n")
     }
 
 
-    //刷新，更新购物车数据,一般是没有变化的
+    //刷新，只是一个效果，没有进行数据请求
     private fun refreshCart(adapter: CartAdapter){
 
         thread {
             Thread.sleep(2000)
-            adapter.notifyDataSetChanged()
-            swipeRefresh.isRefreshing = false
+          //  adapter.notifyDataSetChanged()
+            cartSwipeRefresh.isRefreshing = false
+
         }
 
     }
 
+    //菜单项按钮的点击事件
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home -> startActivity(Intent(this,MainActivity::class.java))
+        }
+
+        return true
+    }
+
+
+    //计算总价格
+    fun updateCartSum(m : MutableMap<Food,Int>):String{
+       // Log.d("www","计算总价中...总共有${m.size}项")
+        var sumPrice : Double = 0.0
+
+        m.forEach{ (_Food,_num) ->
+
+             if(_num != 0){
+                  sumPrice += _Food.price*_num
+               //  Log.d("www","${_Food.name},有${_num}个，每个${_Food.price}元")
+             }
+          //  Log.d("www","${_Food.name}数类型${_num}")
+
+        }
+
+        return String.format("%.2f",sumPrice)
+    }
+
+//测试用
+    override fun onPause() {
+        super.onPause()
+        Log.d("www","CartActivity进入Pause状态，cviewModel.items大小为： ${cviewModel.items.size}")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("www","CartActivity进入Stop状态，cviewModel.items大小为： ${cviewModel.items.size}")
+    }
 
 }

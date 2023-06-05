@@ -9,10 +9,10 @@
     tools:context=".CartActivity"
     android:id="@+id/CartDrawerLayout">
 
-    <!--    CoordinatorLayout监听子布局滚动,阻止遮挡现象-->
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
         <!--appBar会监听子控件滚动事件,滚动时隐藏toolbar-->
@@ -26,8 +26,10 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_scrollFlags="scroll|enterAlways|snap" />
+                android:layout_gravity="top"
+                />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -36,38 +38,64 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/cartSwipeRefresh"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior" >
-            <!--联动滚动，不会和toolbar相互遮挡，只有CoordinatorLayout直接子控件可以使用-->
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            >
+            <!--联动滚动，使得Recyclerview不会和toolbar相互遮挡，只有CoordinatorLayout直接子控件可以使用-->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="9"
                 android:id="@+id/cartRecyclerView"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:background="@drawable/border">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textSize="20dp"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:layout_gravity="bottom"
+                    android:textColor="#6e6e6e"
+                    android:text="总价格为:  ￥" />
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/cartSum"
+                    android:textSize="26dp"
+                    android:textStyle="bold|italic"
+                    android:textColor="#CF1818"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:layout_gravity="bottom"
+                    android:text="9999.99" />
+
+                <Button
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:textSize="20dp"
+                    android:id="@+id/cartGoToOrder"
+                    android:layout_marginLeft="8dp"
+                    android:text="确认订单"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/cartGoToOrder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_margin="16dp"
-            android:elevation="16dp"
-            android:src="@drawable/ic_done"
-            tools:ignore="SpeakableTextPresentCheck" />
-        <!--忽略speakabletext未设置的警告-->
+    </LinearLayout>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-    <!--    滑动菜单栏,设定菜单页面的菜单和头部-->
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/cartNavView"
-        android:layout_gravity="start"
-        app:menu="@menu/nav_menu"
-        app:headerLayout="@layout/nav_header" />
 
 
 </androidx.drawerlayout.widget.DrawerLayout>

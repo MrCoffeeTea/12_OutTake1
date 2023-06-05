@@ -16,7 +16,9 @@ import com.bumptech.glide.Glide
 
 
 //把购物车的viewmodel作为参数传入
-class FoodAdapter(val context: Context, val foodList: List<Food>, private val cartViewModel: CartViewModel) : RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
+class FoodAdapter(val context: Context, val foodList: List<Food>, private val _cartViewModel: CartViewModel) : RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
+
+    val cartViewModel:CartViewModel by lazy { SingleCartViewModel.getCartViewModel() }
 
     //ViewHolder承载列表项的布局,并被绑定了数据
     //列表项的数据和内容在这里找到赋值给holder
@@ -42,6 +44,7 @@ class FoodAdapter(val context: Context, val foodList: List<Food>, private val ca
                 putExtra(FoodActivity.FOOD_NAME, food.name)
                 putExtra(FoodActivity.FOOD_IMAGE_ID, food.imageId)
                 putExtra(FoodActivity.FOOD_CONTENT, food.foodDescription)
+                putExtra(FoodActivity.FOOD_PRICE, food.price)
             }
             context.startActivity(intent)       //跳转水果详情页
         }
@@ -61,15 +64,18 @@ class FoodAdapter(val context: Context, val foodList: List<Food>, private val ca
 
 
         //加入购物车,数据传递到CartActivity
-        //2个列表项，首先点击了A，A修改成功。然后点击B，此时获取的数据B却修改的仍旧是A————————————————————————————————————
         holder.putInCartBtn.setOnClickListener {
             Toast.makeText(holder.itemView.context,"成功添加",Toast.LENGTH_SHORT).show()
-            cartViewModel.id = 2
+            //Log.d("www","此时cartviewmodel数量为：${cartViewModel.items.size}")
+            cartViewModel.id = 2        //测试用
+
+
             //如果存在则数量+1，否则插入
-            if(cartViewModel.items.containsKey(food)){
+            if(cartViewModel.items.keys.toList().map{it.toString()}.contains(food.name)){
+            //if(cartViewModel.items.containsKey(food)){
                 cartViewModel.items.put(food,cartViewModel.items.getValue(food)+1)
-                Log.d("www","${food.name}数量加1，此时数量为${cartViewModel.items[food]}.")
-                //Log.d("www","此时cartviewmodel数量为：${cartViewModel.items.size}")
+                Log.d("www","${food.name}数量加一，此时数量为${cartViewModel.items[food]}.")
+
             }else{
                 cartViewModel.items.put(food,1)
                 Log.d("www","${food.name}添加成功,此时数量为1")

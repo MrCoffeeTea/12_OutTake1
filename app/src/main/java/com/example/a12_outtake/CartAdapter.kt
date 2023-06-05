@@ -94,7 +94,7 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
     //通知RecyclerView删除列表项后更新UI
     fun removeCartFood(position: Int){
         notifyItemRemoved(position)
-        Log.d("www","CartAdapter的notifyItemRemoved被调用")
+        //Log.d("www","CartAdapter的notifyItemRemoved被调用")
     }
 
 

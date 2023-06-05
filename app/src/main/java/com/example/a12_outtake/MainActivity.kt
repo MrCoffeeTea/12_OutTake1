@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //(有可能)插入菜单数据
+        //首次建库时，插入菜单数据
         val dbHelper = FoodDatabaseHelper(this, FoodDatabaseHelper.DATABASE_NAME, FoodDatabaseHelper.VERSION)
         val db = dbHelper.writableDatabase
         //查询是否为空，如果空则插入
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
         navView.setNavigationItemSelectedListener {
             drawerLayout.closeDrawers()          //关闭
 
-            true            //最后一行为返回值,表示时间已经被处理
+            true            //最后一行为返回值,表示事件已经被处理
         }
 
         //购物车按钮点击后页面进行跳转
@@ -109,8 +109,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         //设置列表下拉刷新属性和监听器
-        swipeRefresh.setColorSchemeResources(androidx.appcompat.R.color.abc_background_cache_hint_selector_material_dark)
-        swipeRefresh.setOnRefreshListener {
+        SwipeRefresh.setColorSchemeResources(androidx.appcompat.R.color.abc_background_cache_hint_selector_material_dark)
+        SwipeRefresh.setOnRefreshListener {
             refreshFoods(adapter)      //传入适配器用于通知列表数据已经更新
         }
 
@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread{
                 initFoods()        //重新生成数据
                 adapter.notifyDataSetChanged()      //通知adapter数据已经修改
-                swipeRefresh.isRefreshing = false       //隐藏进度条，表示刷新成功
+                SwipeRefresh.isRefreshing = false       //隐藏进度条，表示刷新成功
             }
         }
     }
