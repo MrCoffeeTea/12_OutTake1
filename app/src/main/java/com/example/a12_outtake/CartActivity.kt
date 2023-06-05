@@ -17,8 +17,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.cart_food_item.*
 import kotlin.concurrent.thread
 
-//cart刷新后导致购物车情况
-//cart的删除按钮未完成
+//购物车页面
 
 //继承CartAdapter的删除食品接口
 class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {

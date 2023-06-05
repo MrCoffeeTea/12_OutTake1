@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
+//购物车页面RecyclerView的适配器
 
 class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
 

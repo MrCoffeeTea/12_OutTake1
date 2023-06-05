@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
 import android.widget.Toast
 
+
+
 //数据库助手类: 上下文，数据库名称，版本号
 class FoodDatabaseHelper(val context: Context, name:String, version: Int) : SQLiteOpenHelper(context, name, null, version) {
 

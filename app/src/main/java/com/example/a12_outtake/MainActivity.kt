@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_cart.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.concurrent.thread
 
+//主页，食物页面
 
 class MainActivity : AppCompatActivity() {
 
