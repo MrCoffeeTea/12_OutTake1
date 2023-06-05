@@ -74,7 +74,7 @@
                     android:gravity="center_horizontal|center_vertical"
                     android:layout_gravity="bottom"
                     android:textColor="#6e6e6e"
-                    android:text="总价格为:  ￥" />
+                    android:text="  共￥" />
 
                 <TextView
                     android:layout_width="100dp"

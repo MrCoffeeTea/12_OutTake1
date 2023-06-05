@@ -42,7 +42,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
         val layoutManager = GridLayoutManager(this, 1)
         cartRecyclerView.layoutManager = layoutManager
         adapter = CartAdapter(this, cviewModel.items)
-        adapter.setOnItemDeleteListener(this)           //设置接口监听
+        adapter.setOnItemDeleteListener(this)                   //设置接口监听
         cartRecyclerView.adapter = adapter
 
 
@@ -78,9 +78,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
     //删除按钮，删除viewmodel的数据后通知adapter数据修改，进而重新渲染页面
     override fun onFoodDeleteBtn(food: Food, num:Int, position:Int) {
         var n = num
-
      //   Log.d("www","现在是CartActivity，是否是UI线程：" + "${Looper.getMainLooper().thread == Thread.currentThread()}")
-
         if(n > 1){
             n = n-1
             cviewModel.items[food] = n
@@ -105,6 +103,19 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
 
        // cviewModel.getCartData()          //控制台观察数据变化
        // Log.d("www","\n")
+    }
+
+    //增加1份食物
+    override fun onFoodAddOne(food: Food, position: Int) {
+
+        val n : Int? = cviewModel.items[food]?.inc()
+        cviewModel.items[food] = n?:0        //数量加1
+        cartFoodNum.text = " * ${n}"
+        adapter.notifyDataSetChanged()
+        Log.d("www","${food.name}增加一个，有${n}个")
+
+        //修改总金额
+        cartSum.setText(updateCartSum(cviewModel.items))
     }
 
 

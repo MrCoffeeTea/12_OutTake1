@@ -24,16 +24,16 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
     //定义回调接口，被CartActivity继承，用于Activity更新UI。因为Adapter内无法更新UI
     interface cartDeleteListener{
         fun onFoodDeleteBtn(food: Food, num:Int, position: Int)     //接口传入被点击的Food
+        fun onFoodAddOne(food: Food, position: Int)         //购物车新增1份
     }
 
     private var mydeletelistener : cartDeleteListener? = null        //引用回调接口
 
-    //实现设置回调方法，用于给CartActivity把自己设置进来
+    //实现设置回调方法，用于给CartActivity把自己设置进来.因为CartActivity继承了cartDeleteListener接口，把自己这个对象传入
+    //从而获得cartActivity对象(即实现该接口的对象)，通过这个对象执行在Activity中实现的接口方法
     fun setOnItemDeleteListener(itemDeleteListener: cartDeleteListener){
         mydeletelistener = itemDeleteListener
     }
-
-
 
 
 
@@ -43,7 +43,7 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
         val foodPrice: TextView = view.findViewById(R.id.foodPrice)
         val foodNumber : TextView = view.findViewById(R.id.cartFoodNum)
         val deleteFood:Button = view.findViewById(R.id.deleteFood)
-
+        val addOneFood:Button = view.findViewById(R.id.addOneFood)
 
     }
 
@@ -85,7 +85,11 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
                 Log.d("www","${holder.foodName.text}的删除按钮被点击了")
                 mydeletelistener?.onFoodDeleteBtn(food,num,position)
             }
+        }
 
+        //食物数量+1
+        holder.addOneFood.setOnClickListener {
+            mydeletelistener?.onFoodAddOne(food,position)       //添加食物，传入food和位置索引
         }
     }
 
