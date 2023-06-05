@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 
 //存储购物车数据
 class CartViewModel:ViewModel(){
+    //Food对象不可以
     val items = mutableMapOf<Food,Int>()
     var id = 1
 

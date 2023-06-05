@@ -71,8 +71,7 @@ class FoodAdapter(val context: Context, val foodList: List<Food>, private val _c
 
 
             //如果存在则数量+1，否则插入
-            if(cartViewModel.items.keys.toList().map{it.toString()}.contains(food.name)){
-            //if(cartViewModel.items.containsKey(food)){
+            if(cartViewModel.items.containsKey(food)){
                 cartViewModel.items.put(food,cartViewModel.items.getValue(food)+1)
                 Log.d("www","${food.name}数量加一，此时数量为${cartViewModel.items[food]}.")
 
