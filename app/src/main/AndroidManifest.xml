@@ -16,6 +16,7 @@
             android:name=".CartActivity"
             android:label="购物车"
             android:theme="@style/myTheme"
+            android:launchMode="singleTask"
             android:exported="false" >
             <meta-data
                 android:name="android.app.lib_name"
@@ -25,6 +26,7 @@
             android:name=".FoodActivity"
             android:label="菜品详情"
             android:exported="false"
+            android:launchMode="singleTask"
             android:theme="@style/FoodActivityTheme" >
             <meta-data
                 android:name="android.app.lib_name"
@@ -34,6 +36,7 @@
             android:name=".MainActivity"
             android:label="超级外卖"
             android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/myTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

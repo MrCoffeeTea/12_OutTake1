@@ -66,6 +66,12 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
         cartGoToOrder.setOnClickListener{
 
         }
+
+        //清空购物车
+        clearCartBtn.setOnClickListener {
+            clearCart()
+        }
+
     }
 
 
@@ -102,7 +108,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
     }
 
 
-    //刷新，只是一个效果，没有进行数据请求
+    //刷新，只是一个效果，没有进行数据请求。控制栏判断了购物车是否空
     private fun refreshCart(adapter: CartAdapter){
 
         thread {
@@ -111,7 +117,7 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
             cartSwipeRefresh.isRefreshing = false
 
         }
-
+        Log.d("www","购物车是否为空${if(isCartEmpty()!=0) "非空" else "空" }")
     }
 
     //菜单项按钮的点击事件
@@ -142,15 +148,39 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
         return String.format("%.2f",sumPrice)
     }
 
-//测试用
+
+    //清空购物车
+    fun clearCart(){
+        Log.d("www","cartActivity通知要清空购物车了")
+        cviewModel.items.clear()
+        adapter.notifyDataSetChanged()
+    }
+
+
+    //判断购物车是否为空,0表示空。
+    fun isCartEmpty() : Int{
+        var flag = 0
+        cviewModel.items.forEach{
+            (k,v)->
+            if(v != 0)
+                flag = 1
+        }
+        return flag
+    }
+
+
+    //测试用
     override fun onPause() {
         super.onPause()
+        adapter.notifyDataSetChanged()
         Log.d("www","CartActivity进入Pause状态，cviewModel.items大小为： ${cviewModel.items.size}")
     }
 
     override fun onStop() {
         super.onStop()
+        adapter.notifyDataSetChanged()
         Log.d("www","CartActivity进入Stop状态，cviewModel.items大小为： ${cviewModel.items.size}")
+
     }
 
 }
