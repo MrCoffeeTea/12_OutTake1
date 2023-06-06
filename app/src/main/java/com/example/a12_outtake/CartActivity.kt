@@ -119,16 +119,18 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
     }
 
 
-    //刷新，只是一个效果，没有进行数据请求。控制栏判断了购物车是否空
+    //刷新，更新购物车数据。控制栏判断了购物车是否空
     private fun refreshCart(adapter: CartAdapter){
 
+        adapter.notifyDataSetChanged()
         thread {
             Thread.sleep(2000)
           //  adapter.notifyDataSetChanged()
             cartSwipeRefresh.isRefreshing = false
 
         }
-        Log.d("www","购物车是否为空${if(isCartEmpty()!=0) "非空" else "空" }")
+        Log.d("www","购物车是否为空${if(isCartEmpty()!=0) " 非空" else " 空" }")
+        Log.d("www","购物车有几个：${cviewModel.items.size}")
     }
 
     //菜单项按钮的点击事件

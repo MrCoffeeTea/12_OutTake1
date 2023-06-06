@@ -135,8 +135,8 @@
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/putInCart"
-                        android:layout_marginLeft="130dp"
+                        android:id="@+id/foodPagePutInCart"
+                        android:layout_marginLeft="120dp"
                         android:text="加入购物车"
 
                         android:textStyle="bold" />

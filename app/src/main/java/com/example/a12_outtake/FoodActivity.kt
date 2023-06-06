@@ -3,6 +3,7 @@ package com.example.a12_outtake
 import android.graphics.Paint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_food.*
@@ -13,22 +14,25 @@ import kotlin.random.Random
 //食品详情页面
 class FoodActivity : AppCompatActivity() {
 
+
     companion object{
         const val FOOD_NAME = "food_name"
         const val FOOD_IMAGE_ID = "food_image_id"
         const val FOOD_CONTENT = "food_content"
         const val FOOD_PRICE = "food_price"
+        const val FOOD = "food"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_food)
 
-        //通过Intent获取被点击食品的名称和图片的资源ID
-        val foodName = intent.getStringExtra(FOOD_NAME) ?: ""
-        val foodImageId = intent.getIntExtra(FOOD_IMAGE_ID, 0)
-        val foodDescription = intent.getStringExtra(FOOD_CONTENT) ?: ""
-        val foodPrice = intent.getDoubleExtra(FOOD_PRICE,100.0)
+        //通过Intent获取被点击食品的food对象
+        val food = intent.getParcelableExtra<Food>(FOOD)
+        val foodName = food?.name
+        val foodImageId = food?.imageId
+        val foodDescription = food?.foodDescription
+        val foodPrice = food?.price
 
         setSupportActionBar(toolbar)        //设定可折叠的加强版toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)   //打开home键
@@ -41,6 +45,19 @@ class FoodActivity : AppCompatActivity() {
         newPrice.setText("￥ ${foodPrice}")                                    //新价格
         oldPrice.setText("${generateOldPrice()}")
         oldPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);          //旧价格添加删除线
+
+        foodPagePutInCart.setOnClickListener {
+
+            val cviewModel : CartViewModel by lazy { SingleCartViewModel.getCartViewModel() }
+            Log.d("www","--------${cviewModel.id}")
+            if(food != null)
+               if(cviewModel.items[food] == null)           //如果没有这个商品，新增。否则数量加1
+                   cviewModel.items.put(food,1)
+                else
+                    cviewModel.items[food] = cviewModel.items[food]!!.inc()
+
+        }
+
 
     }
 

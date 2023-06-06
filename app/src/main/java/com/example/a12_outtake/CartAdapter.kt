@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide
 
 //购物车页面RecyclerView的适配器
 
-class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
+class CartAdapter(val context: Context, val foodMap: Map<Food, Int>) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
 
 
     //定义回调接口，被CartActivity继承，用于Activity更新UI。因为Adapter内无法更新UI
@@ -55,11 +55,12 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
         val holder = ViewHolder(view)
         holder.itemView.setOnClickListener{
             val position = holder.adapterPosition
-            val food = foodList.keys.toList()[position]
+            val food = foodMap.keys.toList()[position]
             val intent = Intent(context, FoodActivity::class.java).apply {
                 putExtra(FoodActivity.FOOD_NAME, food.name)
                 putExtra(FoodActivity.FOOD_IMAGE_ID, food.imageId)
                 putExtra(FoodActivity.FOOD_CONTENT, food.foodDescription)
+                putExtra(FoodActivity.FOOD,food)
             }
             context.startActivity(intent)
         }
@@ -70,8 +71,8 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val food = foodList.keys.toList()[position]
-        var num = foodList[food]
+        val food = foodMap.keys.toList()[position]
+        var num = foodMap[food]
 
         holder.foodName.text = food.name
         holder.foodPrice.text = "￥ ${food.price.toString()}"
@@ -94,7 +95,7 @@ class CartAdapter(val context: Context, val foodList: Map<Food, Int>) : Recycler
     }
 
 
-    override fun getItemCount() = foodList.size
+    override fun getItemCount() = foodMap.size
 
     //通知RecyclerView删除列表项后更新UI
     fun removeCartFood(position: Int){

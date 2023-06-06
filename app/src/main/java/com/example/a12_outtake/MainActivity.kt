@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     //数据数组
     var foods : MutableList<Food> = mutableListOf()
     val foodList = ArrayList<Food>()
+
     //Food添加购物车需要监控购物车数据，把其传递给FoodAdapter
     val cartviewModel:CartViewModel by lazy { SingleCartViewModel.getCartViewModel() }
    // val cartviewModelStore = ViewModelStore()           //存储viewmodel状态，确保主页和购物车的cartviewmodel是同一个对象，md没屌用

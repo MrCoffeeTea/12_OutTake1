@@ -28,6 +28,7 @@ class FoodAdapter(val context: Context, val foodList: List<Food>, private val _c
         val foodName : TextView = view.findViewById(R.id.foodName)
         val foodPrice: TextView = view.findViewById(R.id.foodPrice)
         val putInCartBtn : Button = view.findViewById(R.id.putInCart)
+
     }
 
     //建立view视图
@@ -38,17 +39,6 @@ class FoodAdapter(val context: Context, val foodList: List<Food>, private val _c
 
         //设置列表项点击的监听事件,实际上是给food_item.xml最外层布局添加了监听事件，在内部通过adapterposition获取具体项
         val holder = ViewHolder(view)
-        holder.itemView.setOnClickListener{
-            val position = holder.adapterPosition       //获取被点击的列表项的索引
-            val food = foodList[position]
-            val intent = Intent(context, FoodActivity::class.java).apply {         //跳转到详情页面，并传递被点击项的数据数据
-                putExtra(FoodActivity.FOOD_NAME, food.name)
-                putExtra(FoodActivity.FOOD_IMAGE_ID, food.imageId)
-                putExtra(FoodActivity.FOOD_CONTENT, food.foodDescription)
-                putExtra(FoodActivity.FOOD_PRICE, food.price)
-            }
-            context.startActivity(intent)       //跳转水果详情页
-        }
 
         return holder
     }
@@ -63,6 +53,12 @@ class FoodAdapter(val context: Context, val foodList: List<Food>, private val _c
         //load加载图片,传入url或者本地路径或者资源id,into将图片设置到一个imageView中
         Glide.with(context).load(food.imageId).into(holder.foodImage)
 
+        holder.foodImage.setOnClickListener{
+            val intent = Intent(context, FoodActivity::class.java).apply {         //跳转到详情页面，并传递被点击项的数据数据
+                putExtra(FoodActivity.FOOD,food)                //传递food
+            }
+            context.startActivity(intent)       //跳转水果详情页
+        }
 
         //加入购物车,数据传递到CartActivity
         holder.putInCartBtn.setOnClickListener {
