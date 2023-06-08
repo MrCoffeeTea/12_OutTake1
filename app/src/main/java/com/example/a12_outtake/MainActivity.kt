@@ -79,13 +79,14 @@ class MainActivity : AppCompatActivity() {
 
         //设置列表内容,获取购物车数据的viewmodel并传递给FoodAdapter
         initFoods()
-      //  cartviewModel = ViewModelProvider(viewModelStore,ViewModelProvider.AndroidViewModelFactory(application))
-       //     .get(CartViewModel::class.java)         //确保此处的cartViewModel和cartactivity的viewmodel是同一个对象
         val layoutManager = GridLayoutManager(this, 2)  //网格布局
         recyclerView.layoutManager = layoutManager
-        val adapter = FoodAdapter(this, foodList, cartviewModel)     //适配器绑定
+        val adapter = FoodAdapter(this, foodList)     //适配器绑定
         recyclerView.adapter = adapter
 
+        //把购物车每一项都添加，数量置为0
+      //  for(i in foodList)
+      //      cartviewModel.items.put(i,0)
 
 
         //设置自己的toolbar

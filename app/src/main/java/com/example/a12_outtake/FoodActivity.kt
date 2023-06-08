@@ -56,6 +56,7 @@ class FoodActivity : AppCompatActivity() {
                 else
                     cviewModel.items[food] = cviewModel.items[food]!!.inc()
 
+
         }
 
 

@@ -22,9 +22,7 @@ import kotlin.concurrent.thread
 //继承CartAdapter的删除食品接口
 class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
 
-    lateinit var foodList: MutableMap<Food,Int>
     val cviewModel : CartViewModel by lazy { SingleCartViewModel.getCartViewModel() }
-    val cviewModelStore = ViewModelStore()
     lateinit var adapter : CartAdapter              //tmd要注意使用同一个adapter！不然数据tmd不更新
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,11 +34,11 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
         //从CartViewModel获取购物车数据：无效
        // cviewModel = ViewModelProvider(viewModelStore,ViewModelProvider.AndroidViewModelFactory(application)).get(CartViewModel::class.java)
 
-       // Log.d("www","购物车获取的cviewModel的items的数量为${cviewModel.items.size}")
-
         //渲染购物车列表UI
         val layoutManager = GridLayoutManager(this, 1)
         cartRecyclerView.layoutManager = layoutManager
+
+        //过滤，只留下数量不为0的食物列表，把这个列表作为数据同cartAdapter绑定：cviewModel.items.filterValues { it != 0 }
         adapter = CartAdapter(this, cviewModel.items)
         adapter.setOnItemDeleteListener(this)                   //设置接口监听
         cartRecyclerView.adapter = adapter
@@ -97,7 +95,6 @@ class CartActivity : AppCompatActivity(), CartAdapter.cartDeleteListener {
         }else{
             Log.d("www","错误，删除了购物车不存在的食品")
         }
-
         //修改总金额
         cartSum.setText(updateCartSum(cviewModel.items))
 

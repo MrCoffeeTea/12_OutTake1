@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide
 //首页食物RecyclerView的适配器
 
 //把购物车的viewmodel作为参数传入
-class FoodAdapter(val context: Context, val foodList: List<Food>, private val _cartViewModel: CartViewModel) : RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
+class FoodAdapter(val context: Context, val foodList: List<Food>) : RecyclerView.Adapter<FoodAdapter.ViewHolder>() {
 
     val cartViewModel:CartViewModel by lazy { SingleCartViewModel.getCartViewModel() }
 

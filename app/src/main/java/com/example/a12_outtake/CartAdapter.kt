@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 
 class CartAdapter(val context: Context, val foodMap: Map<Food, Int>) : RecyclerView.Adapter<CartAdapter.ViewHolder>() {
 
+    val cviewModel : CartViewModel by lazy { SingleCartViewModel.getCartViewModel() }
 
     //定义回调接口，被CartActivity继承，用于Activity更新UI。因为Adapter内无法更新UI
     interface cartDeleteListener{
@@ -72,12 +73,16 @@ class CartAdapter(val context: Context, val foodMap: Map<Food, Int>) : RecyclerV
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
         val food = foodMap.keys.toList()[position]
-        var num = foodMap[food]
+        val num = foodMap[food]
+        //val food = cviewModel.items.keys.toList()[position]
+       // var num = cviewModel.items[food]
 
         holder.foodName.text = food.name
         holder.foodPrice.text = "￥ ${food.price.toString()}"
         holder.foodNumber.text = " * $num"
         Glide.with(context).load(food.imageId).into(holder.foodImage)
+
+
 
         //删除food：数量减1或者去除
         holder.deleteFood.setOnClickListener {
@@ -96,12 +101,5 @@ class CartAdapter(val context: Context, val foodMap: Map<Food, Int>) : RecyclerV
 
 
     override fun getItemCount() = foodMap.size
-
-    //通知RecyclerView删除列表项后更新UI
-    fun removeCartFood(position: Int){
-        notifyItemRemoved(position)
-        //Log.d("www","CartAdapter的notifyItemRemoved被调用")
-    }
-
 
 }
